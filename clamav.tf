@@ -25,7 +25,7 @@ EOF
 }
 
 resource "aws_iam_policy" "clamav" {
-    name        = "clamav"
+    name = "clamav"
 
     policy = <<EOF
 {
@@ -80,24 +80,24 @@ resource "aws_lambda_function" "update-clamav-definitions" {
 
 // Cloudwatch event that fires every three hours
 resource "aws_cloudwatch_event_rule" "every-three-hours" {
-    name = "every-three-hours"
-    description = "Fires every three hours"
+    name                = "every-three-hours"
+    description         = "Fires every three hours"
     schedule_expression = "rate(3 hours)"
 }
 
 // A rule to call a lambda function when the Cloudwatch event fires
 resource "aws_cloudwatch_event_target" "update-clamav-definitions" {
-    rule = "${aws_cloudwatch_event_rule.every-three-hours.name}"
+    rule      = "${aws_cloudwatch_event_rule.every-three-hours.name}"
     target_id = "update-clamav-definitions"
-    arn = "${aws_lambda_function.update-clamav-definitions.arn}"
+    arn       = "${aws_lambda_function.update-clamav-definitions.arn}"
 }
 
 // Permissions to allow the Cloudwatch event to call our Lambda function
 resource "aws_lambda_permission" "allow_cloudwatch_to_update_antivirus" {
-    statement_id = "AllowExecutionFromCloudWatch"
-    action = "lambda:InvokeFunction"
+    statement_id  = "AllowExecutionFromCloudWatch"
+    action        = "lambda:InvokeFunction"
     function_name = "${aws_lambda_function.update-clamav-definitions.function_name}"
-    principal = "events.amazonaws.com"
+    principal  = "events.amazonaws.com"
     source_arn = "${aws_cloudwatch_event_rule.every-three-hours.arn}"
 }
 
