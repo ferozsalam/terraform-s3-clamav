@@ -13,5 +13,4 @@ module "terraform-test" {
   source  = "/home/feroz/terraclam-s3/"
   clamav-definitions-bucket = "clamav-definitions"
   bucket-to-scan            = "${var.bucket-to-scan}"
-  bucket-to-scan-arn        = "${aws_s3_bucket.bucket-to-scan.arn}"
 }
