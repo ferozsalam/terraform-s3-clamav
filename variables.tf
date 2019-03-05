@@ -5,7 +5,3 @@ variable "clamav-definitions-bucket" {
 variable "bucket-to-scan" {
     description = "The bucket which needs scanning"
 }
-
-variable "bucket-to-scan-arn" {
-    description = "The ARN of the bucket which needs scanning"
-}

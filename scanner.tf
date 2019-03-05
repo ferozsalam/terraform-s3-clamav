@@ -78,7 +78,7 @@ resource "aws_lambda_permission" "allow_terraform_bucket" {
     action = "lambda:InvokeFunction"
     function_name = "${aws_lambda_function.scan-file.arn}"
     principal = "s3.amazonaws.com"
-    source_arn = "${var.bucket-to-scan-arn}"
+    source_arn = "arn:aws:s3:::${var.bucket-to-scan}"
 }
 
 // Allow the S3 bucket to send notifications to the lambda function
