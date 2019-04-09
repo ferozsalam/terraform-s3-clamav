@@ -11,7 +11,7 @@ The code and architecture of the resulting AWS infrastructure is the work of
 [Upside Travel](https://github.com/upsidetravel/bucket-antivirus-function), although
 their current build does not work, so I have used the forked version by
 [Petri Laakso](https://github.com/petrilaakso/bucket-antivirus-function). The
-library build was created in December 2018. This is simply a wrapper to ease
+library build was created in April 2019. This is simply a wrapper to ease
 the provisioning of this service, removing the need to manually click on
 buttons in the AWS console.
 
