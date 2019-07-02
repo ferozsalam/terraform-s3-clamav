@@ -74,16 +74,18 @@ resource "aws_lambda_function" "scan-file" {
 
 // Allow the lambda function to access the S3 bucket
 resource "aws_lambda_permission" "allow_terraform_bucket" {
-    statement_id = "AllowExecutionFromS3Bucket"
+    count = "${length(var.buckets-to-scan)}"
+    statement_id = "AllowExecutionFromS3Bucket-${element(var.buckets-to-scan, count.index)}"
     action = "lambda:InvokeFunction"
     function_name = "${aws_lambda_function.scan-file.arn}"
     principal = "s3.amazonaws.com"
-    source_arn = "arn:aws:s3:::${var.bucket-to-scan}"
+    source_arn = "arn:aws:s3:::${element(var.buckets-to-scan, count.index)}"
 }
 
 // Allow the S3 bucket to send notifications to the lambda function
 resource "aws_s3_bucket_notification" "new-file-notification" {
-    bucket = "${var.bucket-to-scan}"
+    count = "${length(var.buckets-to-scan)}"
+    bucket = "${element(var.buckets-to-scan, count.index)}"
 
     lambda_function {
         lambda_function_arn = "${aws_lambda_function.scan-file.arn}"
@@ -94,8 +96,9 @@ resource "aws_s3_bucket_notification" "new-file-notification" {
 data "aws_caller_identity" "current" {}
 
 // Add a policy to the bucket that prevents download of infected files
-resource "aws_s3_bucket_policy" "bucket-to-scan" {
-  bucket = "${var.bucket-to-scan}"
+resource "aws_s3_bucket_policy" "buckets-to-scan" {
+  count = "${length(var.buckets-to-scan)}"
+  bucket = "${element(var.buckets-to-scan, count.index)}"
 
   policy = <<POLICY
 {
@@ -111,7 +114,7 @@ resource "aws_s3_bucket_policy" "bucket-to-scan" {
           ]
       },
       "Action": "s3:GetObject",
-      "Resource": "arn:aws:s3:::${var.bucket-to-scan}/*",
+      "Resource": "arn:aws:s3:::${element(var.buckets-to-scan, count.index)}/*",
       "Condition": {
           "StringNotEquals": {
               "s3:ExistingObjectTag/av-status": "CLEAN"

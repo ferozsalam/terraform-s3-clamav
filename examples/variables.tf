@@ -2,7 +2,8 @@ variable "access_key" {}
 variable "secret_key" {}
 variable "region" {}
 
-variable "bucket-to-scan" {
-    default = "terraform-files-to-scan"
+variable "buckets-to-scan" {
+    type = "list"
+    default = ["terraform-files-to-scan", "second-tf-files-to-scan"]
 }
 

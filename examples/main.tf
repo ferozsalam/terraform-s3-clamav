@@ -5,12 +5,13 @@ provider "aws" {
 }
 
 resource "aws_s3_bucket" "bucket-to-scan" {
-    bucket = "${var.bucket-to-scan}"
+    count = "${length(var.buckets-to-scan)}"
+    bucket = "${element(var.buckets-to-scan, count.index)}"
     acl    = "private"
 }
 
 module "terraform-test" {
   source  = "/home/feroz/terraclam-s3/"
   clamav-definitions-bucket = "clamav-definitions"
-  bucket-to-scan            = "${var.bucket-to-scan}"
+  buckets-to-scan            = "${var.buckets-to-scan}"
 }
